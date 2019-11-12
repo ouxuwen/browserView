@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, BrowserView} = require('electron')
 const path = require('path')
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -12,9 +12,22 @@ function createWindow () {
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration:true,
     }
   })
+  let view1 = new BrowserView()
+  mainWindow.addBrowserView(view1)
+  view1.setBounds({ x: -800, y: 0, width: 800, height: 600 })
+  view1.webContents.loadFile('view.html')
+  let view2 = new BrowserView()
+  mainWindow.addBrowserView(view2)
+  view2.setBounds({ x: 800, y: 0, width: 800, height: 600 })
+  view2.webContents.loadFile('view2.html')
+  // let view3 = new BrowserView()
+  // mainWindow.addBrowserView(view3)
+  // view3.setBounds({ x: 0, y: 0, width: 800, height: 600 })
+  // view3.webContents.loadFile('index.html')
 
   // and load the index.html of the app.
   mainWindow.loadFile('index.html')
@@ -49,5 +62,3 @@ app.on('activate', function () {
   if (mainWindow === null) createWindow()
 })
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
